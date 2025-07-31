@@ -18,6 +18,9 @@ Cài đặt model:
 ```bash
 ollama pull qwen2:7b-instruct
 ```
+```bash
+ollama pull mistral:7b-instruct
+```
 #### 1 Download manual:
 1 Vào https://github.com/cloudflare/cloudflared/releases
 
