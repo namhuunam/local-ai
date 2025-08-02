@@ -21,7 +21,7 @@ ollama pull qwen2:7b-instruct
 ```bash
 ollama pull mistral:7b-instruct
 ```
-### 1 Download manual:
+### 1 Download manual Windows:
 1 Vào https://github.com/cloudflare/cloudflared/releases
 
 2 Download cloudflared-windows-amd64.exe
@@ -29,6 +29,14 @@ ollama pull mistral:7b-instruct
 3 Đổi tên thành cloudflared.exe
 
 4 Copy vào C:\Windows\System32\ (cần quyền Admin)
+
+### 1.1 Download manual ubuntu:
+```bash
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+```
+```bash
+sudo dpkg -i cloudflared-linux-amd64.deb
+```
 
 ### 2 Từ Zero Trust Dashboard:
 
