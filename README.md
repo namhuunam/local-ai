@@ -21,7 +21,7 @@ ollama pull qwen2:7b-instruct
 ```bash
 ollama pull mistral:7b-instruct
 ```
-#### 1 Download manual:
+### 1 Download manual:
 1 Vào https://github.com/cloudflare/cloudflared/releases
 
 2 Download cloudflared-windows-amd64.exe
@@ -30,14 +30,14 @@ ollama pull mistral:7b-instruct
 
 4 Copy vào C:\Windows\System32\ (cần quyền Admin)
 
-#### 2 Từ Zero Trust Dashboard:
+### 2 Từ Zero Trust Dashboard:
 
 1 Vào https://one.dash.cloudflare.com
 2 Chọn Networks → Tunnels
 
 3 Hoặc Networks → Cloudflare Tunnel
 
-#### 3 Tạo tunnel mới:
+### 3 Tạo tunnel mới:
 
 1 Click Create a tunnel
 
@@ -47,7 +47,7 @@ ollama pull mistral:7b-instruct
 
 4 Click Save tunnel
 
-#### BƯỚC 34: CÀI ĐẶT CONNECTOR
+### BƯỚC 34: CÀI ĐẶT CONNECTOR
 
 3.1 Copy install command:
 
@@ -73,7 +73,7 @@ winget install --id Cloudflare.cloudflared
 cloudflared.exe service install eyJhIjoiYWJjMTIzLi4uIn0=
 ```
 
-#### BƯỚC 5: CẤU HÌNH PUBLIC HOSTNAME
+### BƯỚC 5: CẤU HÌNH PUBLIC HOSTNAME
 
 4.1 Trong Tunnel Dashboard:
 
@@ -97,7 +97,7 @@ Kết quả: ai.codepion.xyz → localhost:11434
 
 4.3 Click Save hostname
 
-#### BƯỚC 6: TEST DOMAIN
+### BƯỚC 6: TEST DOMAIN
 
 6.1 Đảm bảo Ollama đang chạy:
 
