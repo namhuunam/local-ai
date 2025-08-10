@@ -124,3 +124,8 @@ cloudflared service install
 ```bash
 sc config cloudflared start= auto
 ```
+
+### Lệnh kiểm tra ollama có sử dụng GPU trên WSL2 không
+```bash
+watch -n 0.5 nvidia-smi
+```
