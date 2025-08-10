@@ -102,7 +102,8 @@ cloudflared.exe service install eyJhIjoiYWJjMTIzLi4uIn0=
  URL: localhost:11434
  
 Kết quả: ai.codepion.xyz → localhost:11434
-
+HTTP Settings
+HTTP Host Header:localhost
 4.3 Click Save hostname
 
 ### BƯỚC 6: TEST DOMAIN
