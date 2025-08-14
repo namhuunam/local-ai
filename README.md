@@ -129,3 +129,137 @@ sc config cloudflared start= auto
 ```bash
 watch -n 0.5 nvidia-smi
 ```
+
+
+### tạo enpoint riêng cho cpu và gpu
+Bước 1: Tạo cấu trúc thư mục mới
+```bash
+# Tạo thư mục config riêng cho mỗi instance
+mkdir -p /home/ubuntu/.ollama-cpu
+mkdir -p /home/ubuntu/.ollama-gpu
+
+# Tạo symlink để share models (tiết kiệm dung lượng)
+ln -s /home/ubuntu/.ollama/models /home/ubuntu/.ollama-cpu/models
+ln -s /home/ubuntu/.ollama/models /home/ubuntu/.ollama-gpu/models
+
+# Kiểm tra symlink đã tạo đúng chưa
+ls -la /home/ubuntu/.ollama-cpu/
+ls -la /home/ubuntu/.ollama-gpu/
+```
+
+```bash
+nano ~/ollama-cpu.sh
+```
+```bash
+#!/bin/bash
+export CUDA_VISIBLE_DEVICES=""
+export OLLAMA_HOST="127.0.0.1:11436"
+export OLLAMA_MODELS="/home/ubuntu/.ollama-cpu"
+
+echo "🖥️ Starting Ollama CPU instance on port 11436..."
+echo "Models path: $OLLAMA_MODELS"
+echo "Shared models via symlink"
+ollama serve &
+wait
+```
+
+```bash
+nano ~/ollama-gpu.sh
+```
+```bash
+#!/bin/bash
+export CUDA_VISIBLE_DEVICES="0"
+export OLLAMA_HOST="127.0.0.1:11435"
+export OLLAMA_MODELS="/home/ubuntu/.ollama-gpu"
+
+echo "🚀 Starting Ollama GPU instance on port 11435..."
+echo "Models path: $OLLAMA_MODELS"
+echo "Shared models via symlink"
+ollama serve &
+wait
+```
+```bash
+# Pull cho CPU instance
+OLLAMA_HOST="127.0.0.1:11436" ollama pull llama3:8b
+
+# Pull cho GPU instance  
+OLLAMA_HOST="127.0.0.1:11435" ollama pull qwen2:7b-instruct
+```
+Bước 4: Khởi động và test
+```bash
+./ollama-cpu.sh
+```
+```bash
+./ollama-gpu.sh
+```
+Bước 5: Tự Khởi động
+Tạo systemd service cho CPU
+```bash
+sudo nano /etc/systemd/system/ollama-cpu.service
+```
+```bash
+[Unit]
+Description=Ollama CPU Instance (llama3:8b)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/home/ubuntu/ollama-cpu.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+```
+Tạo systemd service cho GPU
+```bash
+sudo nano /etc/systemd/system/ollama-gpu.service
+```
+```bash
+[Unit]
+Description=Ollama GPU Instance (qwen2:7b-instruct)
+After=network.target ollama-cpu.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/home/ubuntu/ollama-gpu.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+```
+Cấp quyền thực thi cho scripts
+```bash
+chmod +x ~/ollama-cpu.sh
+chmod +x ~/ollama-gpu.sh
+```
+Kích hoạt services
+```bash
+# Reload systemd
+sudo systemctl daemon-reload
+
+# Enable auto-start khi boot
+sudo systemctl enable ollama-cpu
+sudo systemctl enable ollama-gpu
+
+# Start services ngay
+sudo systemctl start ollama-cpu
+sudo systemctl start ollama-gpu
+
+# Kiểm tra status
+sudo systemctl status ollama-cpu
+sudo systemctl status ollama-gpu
+```
